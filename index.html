@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Benjamin Zec — Quantum Computing &amp; ML</title>
+<meta name="description" content="Portfolio von Benjamin Zec: Quantum Computing, Machine Learning, Forschung, Projekte.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<div id="stars"></div>
+
+<nav class="navbar">
+  <div class="nav-inner">
+    <a class="brand" href="#home">BZ<span class="dot">.</span></a>
+    <div class="nav-links">
+      <a href="#garden">Garten</a>
+      <a href="#projects">Projekte</a>
+      <a href="#papers">Paper</a>
+      <a href="#cv">CV</a>
+      <a href="#contact">Kontakt</a>
+    </div>
+  </div>
+</nav>
+
+<header id="home" class="hero">
+  <div class="hero-content">
+    <p class="hero-tag">// Willkommen</p>
+    <h1>Benjamin <span class="grad">Zec</span></h1>
+    <p class="hero-sub">Quantum Computing &middot; Machine Learning &middot; Forschung</p>
+    <p class="hero-desc">Ich beschäftige mich mit Quanten-Algorithmen, Tensor-Netzwerken und
+      neuronalen Netzen — von SAT-Solvern über Physics-Informed Neural Networks bis hin zu
+      Quantenschaltkreisen.</p>
+    <div class="hero-actions">
+      <a href="#garden" class="btn btn-primary">🌱 Zum Garten</a>
+      <a href="#projects" class="btn btn-ghost">Projekte ansehen</a>
+    </div>
+  </div>
+  <div class="hero-scroll">
+    <span>scroll</span>
+    <div class="mouse"></div>
+  </div>
+</header>
+
+<!-- ================= GARDEN ================= -->
+<section id="garden" class="garden-section">
+  <div class="section-head">
+    <p class="section-tag">01 — Interaktiv</p>
+    <h2>Mein digitaler Garten</h2>
+    <p class="section-desc">Gieße den Baum und sieh ihm beim Wachsen zu. Jeder Besucher darf mithelfen. 🌳💧</p>
+  </div>
+
+  <div class="garden-wrap">
+    <canvas id="gardenCanvas"></canvas>
+    <div class="garden-ui">
+      <button id="waterBtn" class="water-btn">
+        <span class="drop">💧</span> Gießen
+      </button>
+      <div class="growth-meter">
+        <div class="growth-label">Wachstum</div>
+        <div class="growth-bar"><div id="growthFill" class="growth-fill"></div></div>
+        <div id="growthPct" class="growth-pct">0%</div>
+      </div>
+      <button id="resetBtn" class="reset-btn" title="Garten zurücksetzen">↺ Neu pflanzen</button>
+    </div>
+    <p class="garden-hint" id="gardenHint">Klick auf "Gießen" oder direkt auf den Boden 🌱</p>
+  </div>
+</section>
+
+<!-- ================= PROJECTS ================= -->
+<section id="projects" class="projects-section">
+  <div class="section-head">
+    <p class="section-tag">02 — Code</p>
+    <h2>GitHub Projekte</h2>
+    <p class="section-desc">Live geladen von <a href="https://github.com/ZecPlusPlus" target="_blank" rel="noopener">github.com/ZecPlusPlus</a></p>
+  </div>
+  <div id="repoGrid" class="repo-grid">
+    <div class="repo-card skeleton"></div>
+    <div class="repo-card skeleton"></div>
+    <div class="repo-card skeleton"></div>
+  </div>
+</section>
+
+<!-- ================= PAPERS ================= -->
+<section id="papers" class="papers-section">
+  <div class="section-head">
+    <p class="section-tag">03 — Forschung</p>
+    <h2>Paper &amp; Lektüre</h2>
+    <p class="section-desc">Arbeiten und arXiv-Preprints, mit denen ich mich beschäftigt habe.</p>
+  </div>
+  <div class="paper-list" id="paperList">
+    <!-- filled via JS from data below, but keep static fallback -->
+  </div>
+</section>
+
+<!-- ================= CV ================= -->
+<section id="cv" class="cv-section">
+  <div class="section-head">
+    <p class="section-tag">04 — Werdegang</p>
+    <h2>Lebenslauf</h2>
+    <p class="section-desc">Kurzüberblick — Details auf Anfrage.</p>
+  </div>
+
+  <div class="timeline">
+    <div class="tl-item">
+      <div class="tl-dot"></div>
+      <div class="tl-content">
+        <span class="tl-date">laufend</span>
+        <h3>Master Machine Learning</h3>
+        <p>Vertiefung in Deep Learning, Physics-Informed Neural Networks, Quantum Machine Learning.</p>
+      </div>
+    </div>
+    <div class="tl-item">
+      <div class="tl-dot"></div>
+      <div class="tl-content">
+        <span class="tl-date">Forschung</span>
+        <h3>Quantum Computing &amp; Tensor Networks</h3>
+        <p>SAT-Solving mit Tensor-Netzwerken, Quantenschaltkreis-Simulation, quanteninspirierte Algorithmen.</p>
+      </div>
+    </div>
+    <div class="tl-item">
+      <div class="tl-dot"></div>
+      <div class="tl-content">
+        <span class="tl-date">Skills</span>
+        <h3>Technologien</h3>
+        <p>Python, PyTorch, Qiskit / Quantenframeworks, numerische Methoden, wissenschaftliches Rechnen.</p>
+      </div>
+    </div>
+    <div class="tl-item">
+      <div class="tl-dot"></div>
+      <div class="tl-content">
+        <span class="tl-date">Bald</span>
+        <h3>CV als PDF</h3>
+        <p>Ausführlicher Lebenslauf folgt in Kürze zum Download.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ================= CONTACT ================= -->
+<section id="contact" class="contact-section">
+  <div class="section-head center">
+    <p class="section-tag">05 — Kontakt</p>
+    <h2>Lass uns reden</h2>
+    <p class="section-desc">Fragen zu Projekten, Forschung oder Zusammenarbeit? Melde dich gerne.</p>
+  </div>
+  <div class="contact-links">
+    <a href="https://github.com/ZecPlusPlus" target="_blank" rel="noopener" class="contact-card">
+      <span class="ci">🐙</span><span>GitHub</span>
+    </a>
+    <a href="mailto:benjaminzec@web.de" class="contact-card">
+      <span class="ci">✉️</span><span>E-Mail</span>
+    </a>
+  </div>
+</section>
+
+<footer>
+  <p>Gebaut mit 🌱 &amp; Kaffee — © <span id="year"></span> Benjamin Zec</p>
+</footer>
+
+<script src="script.js"></script>
+</body>
+</html>
