@@ -16,12 +16,13 @@ document.getElementById('year').textContent = new Date().getFullYear();
   const clockChip = document.getElementById('clockChip');
   const selectorEl = document.getElementById('treeSelector');
 
-  const STORAGE_KEY = 'bz_garden_v2';
+  const STORAGE_KEY = 'bz_garden_v3';
   const MAX_GROWTH = 100;
   const MAX_TREES = 6;
   const MAX_WATER = 100; // moisture buffer per tree
-  // real seconds per in-garden minute — the whole day (24h) cycles in ~6 real minutes
-  const MS_PER_GAME_MIN = 1500;
+  const MS_PER_GAME_MIN = 42; // ~1 in-garden day every ~60 real seconds — fast enough to see it move
+  const MAX_TRUNK_FRAC = 0.4; // trees cap out at 40% of canvas height, never take over the scene
+  const MAX_TRUNK_PX = 190; // hard px cap regardless of canvas size
 
   let raindrops = [];
   let leaves = [];
@@ -30,14 +31,18 @@ document.getElementById('year').textContent = new Date().getFullYear();
 
   function freshTree(x) {
     return {
-      x,                 // 0..1 relative position along the ground
-      growth: 0,         // 0..100
-      water: 60,         // moisture buffer, drains over time
-      health: 100,       // 0..100, hits 0 => dead/withered
+      x,           // 0..1 relative position along the ground
+      growth: 0,   // 0..100
+      water: 60,   // moisture buffer, drains over time
+      health: 100, // 0..100, hits 0 => withered/dead
       dead: false,
       sway: Math.random() * Math.PI * 2,
-      bornAt: Date.now(),
     };
+  }
+
+  function evenlySpace(trees) {
+    const n = trees.length;
+    trees.forEach((t, i) => (t.x = (i + 1) / (n + 1)));
   }
 
   function load() {
@@ -46,7 +51,7 @@ document.getElementById('year').textContent = new Date().getFullYear();
       if (raw && Array.isArray(raw.trees) && raw.trees.length) {
         return {
           trees: raw.trees,
-          activeIndex: raw.activeIndex || 0,
+          activeIndex: Math.min(raw.activeIndex || 0, raw.trees.length - 1),
           gameMinutes: raw.gameMinutes || 0,
           lastReal: raw.lastReal || Date.now(),
         };
@@ -77,13 +82,11 @@ document.getElementById('year').textContent = new Date().getFullYear();
   resize();
 
   // ---------- time simulation ----------
-  // Advance game time based on real elapsed time since last visit/tick.
   function advanceTime(deltaMs) {
     const deltaGameMin = deltaMs / MS_PER_GAME_MIN;
     if (deltaGameMin <= 0) return;
     state.gameMinutes += deltaGameMin;
 
-    // drain water & health for every living tree proportional to elapsed game time
     const days = deltaGameMin / (24 * 60);
     state.trees.forEach((t) => {
       if (t.dead) return;
@@ -118,13 +121,7 @@ document.getElementById('year').textContent = new Date().getFullYear();
     if (isNight) icon = '🌙';
     else if (isDusk) icon = '🌇';
     else if (isDawn) icon = '🌅';
-    return {
-      day,
-      hh,
-      mm,
-      icon,
-      dayFrac: totalMin / (24 * 60), // 0..1
-    };
+    return { day, hh, mm, icon, dayFrac: totalMin / (24 * 60) };
   }
 
   // ---------- UI ----------
@@ -139,20 +136,20 @@ document.getElementById('year').textContent = new Date().getFullYear();
     healthPct.textContent = hp + '%';
 
     const info = dayInfo();
-    clockChip.textContent = `${info.icon} Tag ${info.day} · ${String(info.hh).padStart(2, '0')}:${String(info.mm).padStart(2, '0')}`;
+    clockChip.textContent = `${info.icon} Day ${info.day} · ${String(info.hh).padStart(2, '0')}:${String(info.mm).padStart(2, '0')}`;
 
     if (t.dead) {
-      hint.textContent = '🥀 Dieser Baum ist verdorrt — pflanze einen neuen oder wähle einen anderen.';
+      hint.textContent = '🥀 This tree has withered — plant a new one or pick another.';
     } else if (gp >= 100) {
-      hint.textContent = '🌳 Baum voll ausgewachsen! Weiter gießen hält ihn gesund.';
+      hint.textContent = '🌳 Fully grown! Keep watering to maintain its health.';
     } else if (hp < 30) {
-      hint.textContent = '⚠️ Der Baum durstet! Jetzt gießen, sonst welkt er.';
+      hint.textContent = '⚠️ This tree is thirsty! Water it now or it will wither.';
     } else if (gp > 60) {
-      hint.textContent = 'Fast geschafft — weiter gießen! 🌿';
+      hint.textContent = 'Almost there — keep watering! 🌿';
     } else if (gp > 20) {
-      hint.textContent = 'Er wächst! Gieß weiter 💧';
+      hint.textContent = "It's growing! Keep it up 💧";
     } else {
-      hint.textContent = 'Klick auf "Gießen" um diesen Baum zu pflegen 🌱';
+      hint.textContent = 'Click "Water" to take care of this tree 🌱';
     }
 
     plantBtn.disabled = state.trees.length >= MAX_TREES;
@@ -166,7 +163,7 @@ document.getElementById('year').textContent = new Date().getFullYear();
       chip.type = 'button';
       chip.className = 'tree-chip' + (i === state.activeIndex ? ' active' : '') + (t.dead ? ' dead' : '');
       const label = t.dead ? '🥀' : t.growth >= 100 ? '🌳' : t.growth > 25 ? '🌿' : '🌱';
-      chip.textContent = `${label} Baum ${i + 1}`;
+      chip.textContent = `${label} Tree ${i + 1}`;
       chip.addEventListener('click', () => {
         state.activeIndex = i;
         save();
@@ -179,7 +176,7 @@ document.getElementById('year').textContent = new Date().getFullYear();
   function water(amount = 22) {
     const t = activeTree();
     if (t.dead) {
-      hint.textContent = '🥀 Dieser Baum ist bereits verdorrt. Pflanze lieber einen neuen!';
+      hint.textContent = '🥀 This tree has already withered. Plant a new one instead!';
       return;
     }
     t.water = Math.min(MAX_WATER, t.water + amount);
@@ -193,27 +190,12 @@ document.getElementById('year').textContent = new Date().getFullYear();
 
   function plantNewTree() {
     if (state.trees.length >= MAX_TREES) return;
-    const used = state.trees.map((t) => t.x);
-    let x = 0.5;
-    const slots = [];
-    const n = state.trees.length + 1;
-    for (let i = 0; i < n; i++) slots.push((i + 1) / (n + 1));
-    // pick the slot furthest from existing trees for nicer spacing
-    x = slots.reduce((best, s) => {
-      const minDist = (arr) => Math.min(...arr.map((u) => Math.abs(u - s)));
-      return minDist(used.length ? used : [0.5]) > minDist(used.length ? used : [0.5], best) ? s : best;
-    }, slots[0]);
-    state.trees.forEach((t, i) => {
-      t.x = (i + 1) / (state.trees.length + 2);
-    });
-    state.trees.push(freshTree(state.trees.length / (state.trees.length + 1)));
-    // recompute even spacing for all trees
-    const m = state.trees.length;
-    state.trees.forEach((t, i) => (t.x = (i + 1) / (m + 1)));
+    state.trees.push(freshTree(0)); // x gets fixed by evenlySpace below
+    evenlySpace(state.trees);
     state.activeIndex = state.trees.length - 1;
     save();
     updateUI();
-    hint.textContent = '🌱 Ein neuer Baum wurde gepflanzt! Gieße ihn regelmäßig.';
+    hint.textContent = '🌱 A new tree was planted! Water it regularly.';
   }
 
   function resetGarden() {
@@ -223,8 +205,7 @@ document.getElementById('year').textContent = new Date().getFullYear();
   }
 
   function spawnDrops(n) {
-    const t = activeTree();
-    const cx = W * t.x;
+    const cx = W * activeTree().x;
     for (let i = 0; i < n; i++) {
       raindrops.push({
         x: cx + (Math.random() - 0.5) * 60,
@@ -236,10 +217,15 @@ document.getElementById('year').textContent = new Date().getFullYear();
     }
   }
 
+  function trunkHeightOf(t) {
+    const p = t.growth / MAX_GROWTH;
+    const cap = Math.min(H * MAX_TRUNK_FRAC, MAX_TRUNK_PX);
+    return 20 + p * cap;
+  }
+
   function spawnLeafBurst(t) {
     const baseY = H - 55;
-    const trunkHeight = 20 + (t.growth / MAX_GROWTH) * (H - 140);
-    const treeTopY = baseY - trunkHeight;
+    const treeTopY = baseY - trunkHeightOf(t);
     for (let i = 0; i < 5; i++) {
       leaves.push({
         x: W * t.x + (Math.random() - 0.5) * 40,
@@ -271,10 +257,8 @@ document.getElementById('year').textContent = new Date().getFullYear();
   }
 
   function drawSky(dayFrac) {
-    // dayFrac: 0 = midnight, 0.25 = 6am, 0.5 = noon, 0.75 = 6pm
-    const dayness = Math.max(0, Math.sin((dayFrac - 0.25) * Math.PI * 2 * 0.5 + Math.PI / 2));
-    // simpler: brightness curve peaking at noon
-    const angle = (dayFrac - 0.5) * Math.PI * 2; // -pi..pi, 0 at noon
+    // brightness curve peaking at noon (dayFrac=0.5), dark at midnight (0 / 1)
+    const angle = (dayFrac - 0.5) * Math.PI * 2;
     const brightness = Math.max(0, Math.cos(angle * 0.85));
 
     const nightTop = [8, 10, 22];
@@ -287,16 +271,14 @@ document.getElementById('year').textContent = new Date().getFullYear();
 
     const grad = ctx.createLinearGradient(0, 0, 0, H);
     grad.addColorStop(0, `rgb(${top[0]},${top[1]},${top[2]})`);
-    grad.addColorStop(0.6, `rgb(${Math.round((top[0]+bot[0])/2)},${Math.round((top[1]+bot[1])/2)},${Math.round((top[2]+bot[2])/2)})`);
+    grad.addColorStop(0.6, `rgb(${Math.round((top[0] + bot[0]) / 2)},${Math.round((top[1] + bot[1]) / 2)},${Math.round((top[2] + bot[2]) / 2)})`);
     grad.addColorStop(1, `rgb(${bot[0]},${bot[1]},${bot[2]})`);
     ctx.fillStyle = grad;
     ctx.fillRect(0, 0, W, H);
 
-    // sun / moon arc
+    // sun / moon glow, arcing across the sky
     const bodyX = W * dayFrac;
-    const bodyY = H * 0.28 - Math.sin(dayFrac * Math.PI) * H * 0.18;
-    const isSun = brightness > 0.15;
-    const color = isSun ? '255,180,84' : '180,200,255';
+    const color = brightness > 0.15 ? '255,180,84' : '180,200,255';
     const glow = ctx.createRadialGradient(bodyX, 60, 5, bodyX, 60, 120);
     glow.addColorStop(0, `rgba(${color},0.35)`);
     glow.addColorStop(1, `rgba(${color},0)`);
@@ -315,12 +297,25 @@ document.getElementById('year').textContent = new Date().getFullYear();
     }
   }
 
+  function mixColor(hexA, hexB, t) {
+    const a = hexToRgb(hexA);
+    const b = hexToRgb(hexB);
+    const r = Math.round(a[0] + (b[0] - a[0]) * t);
+    const g = Math.round(a[1] + (b[1] - a[1]) * t);
+    const bl = Math.round(a[2] + (b[2] - a[2]) * t);
+    return `rgb(${r},${g},${bl})`;
+  }
+  function hexToRgb(hex) {
+    const h = hex.replace('#', '');
+    return [parseInt(h.slice(0, 2), 16), parseInt(h.slice(2, 4), 16), parseInt(h.slice(4, 6), 16)];
+  }
+
   function drawTree(t) {
     const p = t.growth / MAX_GROWTH; // 0..1
     const baseX = W * t.x;
     const baseY = H - 55;
-    const trunkHeight = 20 + p * (H - 140);
-    const trunkWidth = 6 + p * 16;
+    const trunkHeight = trunkHeightOf(t);
+    const trunkWidth = 6 + p * 12;
     const wither = t.dead ? 1 : Math.max(0, 1 - t.health / 100) * 0.6;
 
     ctx.save();
@@ -329,33 +324,32 @@ document.getElementById('year').textContent = new Date().getFullYear();
     ctx.lineCap = 'round';
     ctx.beginPath();
     ctx.moveTo(baseX, baseY);
-    const sway = t.dead ? 0 : Math.sin(Date.now() / 1400 + t.sway) * (2 + p * 6);
+    const sway = t.dead ? 0 : Math.sin(Date.now() / 1400 + t.sway) * (2 + p * 5);
     ctx.quadraticCurveTo(baseX + sway, baseY - trunkHeight / 2, baseX + sway * 1.4, baseY - trunkHeight);
     ctx.stroke();
 
+    let topPoint;
     if (p > 0.25) {
-      const topX = baseX + sway * 1.4;
-      const topY = baseY - trunkHeight;
       const branches = Math.floor(2 + p * 4);
       for (let i = 0; i < branches; i++) {
         const tt = (i + 1) / (branches + 1);
         const by = baseY - trunkHeight * (0.35 + tt * 0.55);
-        const bxOff = (i % 2 === 0 ? -1 : 1) * (20 + p * 40) * (0.5 + tt);
+        const bxOff = (i % 2 === 0 ? -1 : 1) * (16 + p * 30) * (0.5 + tt);
         ctx.lineWidth = Math.max(2, trunkWidth * (1 - tt) * 0.6);
         ctx.beginPath();
         ctx.moveTo(baseX + sway * tt, by);
-        ctx.quadraticCurveTo(baseX + bxOff * 0.5, by - 20, baseX + bxOff, by - 35 - p * 10);
+        ctx.quadraticCurveTo(baseX + bxOff * 0.5, by - 16, baseX + bxOff, by - 28 - p * 8);
         ctx.stroke();
       }
-      var topPoint = { x: topX, y: topY };
+      topPoint = { x: baseX + sway * 1.4, y: baseY - trunkHeight };
     } else {
-      var topPoint = { x: baseX + sway * 1.4, y: baseY - trunkHeight };
+      topPoint = { x: baseX + sway * 1.4, y: baseY - trunkHeight };
     }
     ctx.restore();
 
-    // foliage — layered soft blobs, grows with p, browns as it withers
+    // foliage — layered soft blobs, grows with p (capped), browns as it withers
     if (p > 0.08) {
-      const foliageR = 18 + p * 90;
+      const foliageR = 16 + p * 62; // capped canopy radius, never dwarfs the scene
       const cx = topPoint.x;
       const cy = topPoint.y - foliageR * 0.35;
       const blobs = [
@@ -404,26 +398,12 @@ document.getElementById('year').textContent = new Date().getFullYear();
       ctx.fill();
     }
 
-    // active-tree marker
     if (state.trees[state.activeIndex] === t) {
       ctx.fillStyle = 'rgba(87,211,140,0.8)';
       ctx.beginPath();
       ctx.arc(baseX, baseY + 8, 3, 0, Math.PI * 2);
       ctx.fill();
     }
-  }
-
-  function mixColor(hexA, hexB, t) {
-    const a = hexToRgb(hexA);
-    const b = hexToRgb(hexB);
-    const r = Math.round(a[0] + (b[0] - a[0]) * t);
-    const g = Math.round(a[1] + (b[1] - a[1]) * t);
-    const bl = Math.round(a[2] + (b[2] - a[2]) * t);
-    return `rgb(${r},${g},${bl})`;
-  }
-  function hexToRgb(hex) {
-    const h = hex.replace('#', '');
-    return [parseInt(h.slice(0, 2), 16), parseInt(h.slice(2, 4), 16), parseInt(h.slice(4, 6), 16)];
   }
 
   function drawDrops() {
@@ -459,8 +439,7 @@ document.getElementById('year').textContent = new Date().getFullYear();
     lastTick = now;
     state.lastReal = now;
 
-    const info = dayInfo();
-    drawSky(info.dayFrac);
+    drawSky(dayInfo().dayFrac);
     drawGround();
     state.trees.forEach(drawTree);
 
@@ -484,7 +463,7 @@ document.getElementById('year').textContent = new Date().getFullYear();
     requestAnimationFrame(step);
   }
 
-  // periodically refresh the UI numbers + persist (canvas loop handles drawing every frame)
+  // periodically refresh UI numbers + persist (canvas loop redraws every frame regardless)
   setInterval(() => {
     updateUI();
     save();
@@ -492,7 +471,6 @@ document.getElementById('year').textContent = new Date().getFullYear();
 
   waterBtn.addEventListener('click', () => water(22));
   canvas.addEventListener('click', (e) => {
-    // click nearest tree to water it, or just water active one
     const rect = canvas.getBoundingClientRect();
     const clickX = (e.clientX - rect.left) / rect.width;
     let nearest = 0;
@@ -509,7 +487,7 @@ document.getElementById('year').textContent = new Date().getFullYear();
   });
   plantBtn.addEventListener('click', plantNewTree);
   resetBtn.addEventListener('click', () => {
-    if (confirm('Den GESAMTEN Garten (alle Bäume) wirklich zurücksetzen?')) resetGarden();
+    if (confirm('Really reset the WHOLE garden (all trees)?')) resetGarden();
   });
 
   catchUp();
@@ -536,8 +514,8 @@ document.getElementById('year').textContent = new Date().getFullYear();
     .then((repos) => {
       const filtered = repos.filter((r) => !r.fork);
       if (!filtered.length) {
-        grid.innerHTML = `<div class="repo-empty">Noch keine öffentlichen Repos hier — schau in der
-          Zwischenzeit auf <a href="https://github.com/${GH_USER}" target="_blank" rel="noopener" style="color:var(--accent2)">GitHub</a> vorbei.</div>`;
+        grid.innerHTML = `<div class="repo-empty">No public repos yet — check back on
+          <a href="https://github.com/${GH_USER}" target="_blank" rel="noopener" style="color:var(--accent2)">GitHub</a> in the meantime.</div>`;
         return;
       }
       grid.innerHTML = '';
@@ -550,7 +528,7 @@ document.getElementById('year').textContent = new Date().getFullYear();
         const color = langColors[repo.language] || '#8a9aab';
         card.innerHTML = `
           <div class="repo-name">📁 ${repo.name}</div>
-          <div class="repo-desc">${repo.description ? escapeHtml(repo.description) : 'Keine Beschreibung vorhanden.'}</div>
+          <div class="repo-desc">${repo.description ? escapeHtml(repo.description) : 'No description yet.'}</div>
           <div class="repo-meta">
             ${repo.language ? `<span><span class="repo-lang-dot" style="background:${color}"></span>${repo.language}</span>` : ''}
             <span>★ ${repo.stargazers_count}</span>
@@ -560,8 +538,8 @@ document.getElementById('year').textContent = new Date().getFullYear();
       });
     })
     .catch(() => {
-      grid.innerHTML = `<div class="repo-empty">Projekte konnten nicht geladen werden. Schau direkt auf
-        <a href="https://github.com/${GH_USER}" target="_blank" rel="noopener" style="color:var(--accent2)">GitHub</a>.</div>`;
+      grid.innerHTML = `<div class="repo-empty">Projects could not be loaded. Check
+        <a href="https://github.com/${GH_USER}" target="_blank" rel="noopener" style="color:var(--accent2)">GitHub</a> directly.</div>`;
     });
 
   function escapeHtml(str) {
@@ -571,18 +549,24 @@ document.getElementById('year').textContent = new Date().getFullYear();
   }
 })();
 
-// ============ PAPERS ============
+// ============ RESEARCH / PAPERS ============
 (function () {
   const papers = [
     {
       title: 'Towards Tensor-Network SAT-Solvers for Quantum-Classical Workflows',
-      sub: 'Zec, Schmidbauer, Franz, Mauerer — angenommen auf der IEEE QCE 2026',
+      role: '1st Author',
+      venue: 'IEEE QCE 2026 (accepted)',
+      authors: 'B. Zec, L. Schmidbauer, M. Franz, W. Mauerer',
+      arxiv: '2608.02041',
       link: 'https://arxiv.org/abs/2608.02041',
     },
     {
       title: 'Works on My QPU: Reproducibility in Quantum Computing Research',
-      sub: 'Köster, Franz, Zec, Hoess, Ramsauer, Mauerer — arXiv 2026',
-      link: 'https://arxiv.org/html/2607.08348v1',
+      role: '3rd Author',
+      venue: 'arXiv preprint, 2026',
+      authors: 'D. Köster, M. Franz, B. Zec, N. Hoess, R. Ramsauer, W. Mauerer',
+      arxiv: '2607.08348',
+      link: 'https://arxiv.org/abs/2607.08348',
     },
   ];
   const list = document.getElementById('paperList');
@@ -590,8 +574,10 @@ document.getElementById('year').textContent = new Date().getFullYear();
     .map(
       (p) => `<a class="paper-item" href="${p.link}" target="_blank" rel="noopener">
         <div>
+          <span class="paper-role">${p.role}</span>
           <div class="paper-title">${p.title}</div>
-          <div class="paper-sub">${p.sub}</div>
+          <div class="paper-sub">${p.authors}</div>
+          <div class="paper-meta">${p.venue} &middot; arXiv:${p.arxiv}</div>
         </div>
         <div class="paper-arrow">↗</div>
       </a>`

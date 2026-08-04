@@ -1,10 +1,10 @@
 <!DOCTYPE html>
-<html lang="de">
+<html lang="en">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Benjamin Zec — Quantum Computing &amp; ML</title>
-<meta name="description" content="Portfolio von Benjamin Zec: Quantum Computing, Machine Learning, Forschung, Projekte.">
+<meta name="description" content="Benjamin Zec's portfolio: quantum computing, machine learning, research, projects.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="style.css">
@@ -17,26 +17,26 @@
   <div class="nav-inner">
     <a class="brand" href="#home">BZ<span class="dot">.</span></a>
     <div class="nav-links">
-      <a href="#garden">Garten</a>
-      <a href="#projects">Projekte</a>
-      <a href="#papers">Paper</a>
+      <a href="#garden">Garden</a>
+      <a href="#projects">Projects</a>
+      <a href="#papers">Research</a>
       <a href="#cv">CV</a>
-      <a href="#contact">Kontakt</a>
+      <a href="#contact">Contact</a>
     </div>
   </div>
 </nav>
 
 <header id="home" class="hero">
   <div class="hero-content">
-    <p class="hero-tag">// Willkommen</p>
+    <p class="hero-tag">// Welcome</p>
     <h1>Benjamin <span class="grad">Zec</span></h1>
-    <p class="hero-sub">Quantum Computing &middot; Machine Learning &middot; Forschung</p>
-    <p class="hero-desc">Ich beschäftige mich mit Quanten-Algorithmen, Tensor-Netzwerken und
-      Physics-Informed Neural Networks — Forschung an der OTH Regensburg zwischen Quantencomputing,
-      Machine Learning und wissenschaftlichem Rechnen.</p>
+    <p class="hero-sub">Quantum Computing &middot; Machine Learning &middot; Research</p>
+    <p class="hero-desc">I work on quantum algorithms, tensor networks and
+      physics-informed neural networks — researching at OTH Regensburg at the
+      intersection of quantum computing, machine learning and scientific computing.</p>
     <div class="hero-actions">
-      <a href="#garden" class="btn btn-primary">🌱 Zum Garten</a>
-      <a href="#projects" class="btn btn-ghost">Projekte ansehen</a>
+      <a href="#garden" class="btn btn-primary">🌱 Visit the garden</a>
+      <a href="#projects" class="btn btn-ghost">See projects</a>
     </div>
   </div>
   <div class="hero-scroll">
@@ -48,33 +48,33 @@
 <!-- ================= GARDEN ================= -->
 <section id="garden" class="garden-section">
   <div class="section-head">
-    <p class="section-tag">01 — Interaktiv</p>
-    <h2>Mein digitaler Garten</h2>
-    <p class="section-desc">Gieße den Baum und sieh ihm beim Wachsen zu. Jeder Besucher darf mithelfen. 🌳💧</p>
+    <p class="section-tag">01 — Interactive</p>
+    <h2>My digital garden</h2>
+    <p class="section-desc">Water your trees, watch them grow — and keep them alive. Time keeps passing, even when you're not looking. 🌳💧</p>
   </div>
 
   <div class="garden-wrap">
     <canvas id="gardenCanvas"></canvas>
     <div class="garden-ui">
       <button id="waterBtn" class="water-btn">
-        <span class="drop">💧</span> Gießen
+        <span class="drop">💧</span> Water
       </button>
-      <button id="plantBtn" class="plant-btn" title="Neuen Baum pflanzen">🌱 Neuer Baum</button>
+      <button id="plantBtn" class="plant-btn" title="Plant a new tree">🌱 Plant tree</button>
       <div class="growth-meter">
-        <div class="growth-label">Wachstum</div>
+        <div class="growth-label">Growth</div>
         <div class="growth-bar"><div id="growthFill" class="growth-fill"></div></div>
         <div id="growthPct" class="growth-pct">0%</div>
       </div>
       <div class="growth-meter health-meter">
-        <div class="growth-label">Gesundheit</div>
+        <div class="growth-label">Health</div>
         <div class="growth-bar"><div id="healthFill" class="health-fill"></div></div>
         <div id="healthPct" class="growth-pct">100%</div>
       </div>
-      <div class="clock-chip" id="clockChip">🌤 Tag 1 · 00:00</div>
-      <button id="resetBtn" class="reset-btn" title="Garten komplett zurücksetzen">↺ Garten zurücksetzen</button>
+      <div class="clock-chip" id="clockChip">🌤 Day 1 · 00:00</div>
+      <button id="resetBtn" class="reset-btn" title="Reset the whole garden">↺ Reset garden</button>
     </div>
     <div class="tree-selector" id="treeSelector"></div>
-    <p class="garden-hint" id="gardenHint">Klick auf einen Baum um ihn auszuwählen, dann "Gießen" — oder pflanze einen neuen 🌱</p>
+    <p class="garden-hint" id="gardenHint">Click a tree to select it, then "Water" — or plant a new one 🌱</p>
   </div>
 </section>
 
@@ -82,8 +82,8 @@
 <section id="projects" class="projects-section">
   <div class="section-head">
     <p class="section-tag">02 — Code</p>
-    <h2>GitHub Projekte</h2>
-    <p class="section-desc">Live geladen von <a href="https://github.com/ZecPlusPlus" target="_blank" rel="noopener">github.com/ZecPlusPlus</a></p>
+    <h2>GitHub projects</h2>
+    <p class="section-desc">Live-loaded from <a href="https://github.com/ZecPlusPlus" target="_blank" rel="noopener">github.com/ZecPlusPlus</a></p>
   </div>
   <div id="repoGrid" class="repo-grid">
     <div class="repo-card skeleton"></div>
@@ -95,31 +95,31 @@
 <!-- ================= PAPERS ================= -->
 <section id="papers" class="papers-section">
   <div class="section-head">
-    <p class="section-tag">03 — Forschung</p>
-    <h2>Paper &amp; Lektüre</h2>
-    <p class="section-desc">Arbeiten und arXiv-Preprints, mit denen ich mich beschäftigt habe.</p>
+    <p class="section-tag">03 — Research</p>
+    <h2>Papers &amp; publications</h2>
+    <p class="section-desc">Peer-reviewed work and preprints I've (co-)authored on quantum computing and quantum-classical workflows.</p>
   </div>
   <div class="paper-list" id="paperList">
-    <!-- filled via JS from data below, but keep static fallback -->
+    <!-- filled via JS from data below -->
   </div>
 </section>
 
 <!-- ================= CV ================= -->
 <section id="cv" class="cv-section">
   <div class="section-head">
-    <p class="section-tag">04 — Werdegang</p>
-    <h2>Lebenslauf</h2>
-    <p class="section-desc">Kurzüberblick — Details auf Anfrage.</p>
+    <p class="section-tag">04 — Background</p>
+    <h2>Curriculum Vitae</h2>
+    <p class="section-desc">A quick overview — full CV available on request.</p>
   </div>
 
   <div class="cv-grid">
     <div class="cv-col">
-      <h3 class="cv-col-title">🎓 Ausbildung</h3>
+      <h3 class="cv-col-title">🎓 Education</h3>
       <div class="timeline">
         <div class="tl-item">
           <div class="tl-dot"></div>
           <div class="tl-content">
-            <span class="tl-date">2026 – heute</span>
+            <span class="tl-date">2026 – present</span>
             <h3>M.Sc. Artificial Intelligence</h3>
             <p>Ostbayerische Technische Hochschule Regensburg (OTH Regensburg)</p>
           </div>
@@ -129,22 +129,22 @@
           <div class="tl-content">
             <span class="tl-date">2021 – 2026</span>
             <h3>B.Sc. Computer Science</h3>
-            <p>OTH Regensburg &middot; Abschlussnote 1,9 &middot; Bachelorarbeit 1,0</p>
+            <p>OTH Regensburg &middot; Final grade 1.9 &middot; Bachelor's thesis grade 1.0</p>
           </div>
         </div>
         <div class="tl-item">
           <div class="tl-dot"></div>
           <div class="tl-content">
             <span class="tl-date">Aug. 2023 – Jan. 2024</span>
-            <h3>Austauschsemester — Machine Learning &amp; Data Science</h3>
-            <p>Maynooth University, Irland</p>
+            <h3>Exchange semester — Machine Learning &amp; Data Science</h3>
+            <p>Maynooth University, Ireland</p>
           </div>
         </div>
         <div class="tl-item">
           <div class="tl-dot"></div>
           <div class="tl-content">
             <span class="tl-date">2019 – 2021</span>
-            <h3>Fachabitur, Wirtschaft</h3>
+            <h3>Vocational Baccalaureate, Economics</h3>
             <p>FOS/BOS Weiden</p>
           </div>
         </div>
@@ -152,14 +152,14 @@
     </div>
 
     <div class="cv-col">
-      <h3 class="cv-col-title">💼 Berufserfahrung</h3>
+      <h3 class="cv-col-title">💼 Experience</h3>
       <div class="timeline">
         <div class="tl-item">
           <div class="tl-dot"></div>
           <div class="tl-content">
-            <span class="tl-date">März 2026 – heute</span>
+            <span class="tl-date">Mar. 2026 – present</span>
             <h3>Research Assistant</h3>
-            <p>OTH Regensburg &middot; Forschung zu Quantum Simulation &amp; Physics-Informed Neural Networks.</p>
+            <p>OTH Regensburg &middot; Research on Quantum Simulation &amp; Physics-Informed Neural Networks.</p>
           </div>
         </div>
         <div class="tl-item">
@@ -167,15 +167,15 @@
           <div class="tl-content">
             <span class="tl-date">Jul. 2023 – Jan. 2026</span>
             <h3>Student Research Assistant</h3>
-            <p>OTH Regensburg &middot; Projekte TAQO-PAM (Quantum Optimisation für Planung &amp; Fertigung) und Q-Linda &middot; Fokus auf Quantenoptimierung &amp; hybride Quanten-Klassik-Methoden.</p>
+            <p>OTH Regensburg &middot; TAQO-PAM (Quantum Optimisation for Planning &amp; Manufacturing) and Q-Linda projects &middot; hybrid quantum-classical optimisation.</p>
           </div>
         </div>
         <div class="tl-item">
           <div class="tl-dot"></div>
           <div class="tl-content">
             <span class="tl-date">Sep. 2024 – Jan. 2025</span>
-            <h3>Pflichtpraktikum (Forschung)</h3>
-            <p>Fraunhofer-Institut für Integrierte Schaltungen IIS &middot; Quantum Reinforcement Learning &amp; Software Engineering für Quantum-Computing-Anwendungen.</p>
+            <h3>Mandatory Research Internship</h3>
+            <p>Fraunhofer Institute for Integrated Circuits IIS &middot; Quantum Reinforcement Learning &amp; software engineering for quantum computing applications.</p>
           </div>
         </div>
         <div class="tl-item">
@@ -183,35 +183,35 @@
           <div class="tl-content">
             <span class="tl-date">Jan. – Jun. 2023</span>
             <h3>Student Research Assistant</h3>
-            <p>OTH Regensburg &middot; KI-Transfer Plus Projekt &middot; Data Science &amp; angewandte KI.</p>
+            <p>OTH Regensburg &middot; KI-Transfer Plus project &middot; data science &amp; applied AI.</p>
           </div>
         </div>
         <div class="tl-item">
           <div class="tl-dot"></div>
           <div class="tl-content">
-            <span class="tl-date">Jan. – Dez. 2022</span>
+            <span class="tl-date">Jan. – Dec. 2022</span>
             <h3>Student Assistant</h3>
-            <p>Universitätsbibliothek, OTH Regensburg</p>
+            <p>University Library, OTH Regensburg</p>
           </div>
         </div>
       </div>
     </div>
 
     <div class="cv-col">
-      <h3 class="cv-col-title">🔬 Wissenschaftliche Beiträge</h3>
+      <h3 class="cv-col-title">🔬 Scientific contributions</h3>
       <ul class="contrib-list">
-        <li><span class="contrib-tag">1st Author</span> „Towards Tensor-Network SAT Solvers for Quantum-Classical Workflows“ — angenommen auf der <strong>IEEE QCE 2026</strong> (<a href="https://arxiv.org/abs/2608.02041" target="_blank" rel="noopener">arXiv:2608.02041</a>).</li>
-        <li><span class="contrib-tag">3rd Author</span> „It Works on My QPU“ — verfügbar auf <strong>arXiv</strong> (<a href="https://arxiv.org/abs/2607.08348" target="_blank" rel="noopener">arXiv:2607.08348</a>).</li>
-        <li><span class="contrib-tag">🏆</span> Gewinner der Demonstrator Competition, AI Days des Regensburg Center for Artificial Intelligence (RCAI).</li>
+        <li><span class="contrib-tag">1st Author</span> "Towards Tensor-Network SAT-Solvers for Quantum-Classical Workflows" — accepted at <strong>IEEE QCE 2026</strong> (<a href="https://arxiv.org/abs/2608.02041" target="_blank" rel="noopener">arXiv:2608.02041</a>).</li>
+        <li><span class="contrib-tag">3rd Author</span> "Works on My QPU: Reproducibility in Quantum Computing Research" — on <strong>arXiv</strong> (<a href="https://arxiv.org/abs/2607.08348" target="_blank" rel="noopener">arXiv:2607.08348</a>).</li>
+        <li><span class="contrib-tag">🏆</span> Winner of the Demonstrator Competition at the AI Days of the Regensburg Center for Artificial Intelligence (RCAI).</li>
       </ul>
 
       <h3 class="cv-col-title" style="margin-top:34px;">🛠 Skills</h3>
       <div class="skills-grid">
-        <div class="skill-cat"><span>Programmierung</span><p>Python, Java, C/C++, SQL</p></div>
+        <div class="skill-cat"><span>Programming</span><p>Python, Java, C/C++, SQL</p></div>
         <div class="skill-cat"><span>Machine Learning</span><p>PyTorch, TensorFlow, Scikit-learn</p></div>
         <div class="skill-cat"><span>Data Science</span><p>Pandas, NumPy, Jupyter, Data Analysis</p></div>
         <div class="skill-cat"><span>Quantum Computing</span><p>PennyLane, Qiskit</p></div>
-        <div class="skill-cat"><span>Optimierung</span><p>Mathematical &amp; Quantum Optimization</p></div>
+        <div class="skill-cat"><span>Optimization</span><p>Mathematical &amp; Quantum Optimization</p></div>
         <div class="skill-cat"><span>Tools</span><p>Git, Linux, LaTeX</p></div>
       </div>
     </div>
@@ -221,22 +221,22 @@
 <!-- ================= CONTACT ================= -->
 <section id="contact" class="contact-section">
   <div class="section-head center">
-    <p class="section-tag">05 — Kontakt</p>
-    <h2>Lass uns reden</h2>
-    <p class="section-desc">Fragen zu Projekten, Forschung oder Zusammenarbeit? Melde dich gerne.</p>
+    <p class="section-tag">05 — Contact</p>
+    <h2>Let's talk</h2>
+    <p class="section-desc">Questions about projects, research or collaboration? Get in touch.</p>
   </div>
   <div class="contact-links">
     <a href="https://github.com/ZecPlusPlus" target="_blank" rel="noopener" class="contact-card">
       <span class="ci">🐙</span><span>GitHub</span>
     </a>
     <a href="mailto:benjamin.zec@oth-regensburg.de" class="contact-card">
-      <span class="ci">✉️</span><span>E-Mail</span>
+      <span class="ci">✉️</span><span>Email</span>
     </a>
   </div>
 </section>
 
 <footer>
-  <p>Gebaut mit 🌱 &amp; Kaffee — © <span id="year"></span> Benjamin Zec</p>
+  <p>Built with 🌱 &amp; coffee — © <span id="year"></span> Benjamin Zec</p>
 </footer>
 
 <script src="script.js"></script>
