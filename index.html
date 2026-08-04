@@ -32,8 +32,8 @@
     <h1>Benjamin <span class="grad">Zec</span></h1>
     <p class="hero-sub">Quantum Computing &middot; Machine Learning &middot; Forschung</p>
     <p class="hero-desc">Ich beschäftige mich mit Quanten-Algorithmen, Tensor-Netzwerken und
-      neuronalen Netzen — von SAT-Solvern über Physics-Informed Neural Networks bis hin zu
-      Quantenschaltkreisen.</p>
+      Physics-Informed Neural Networks — Forschung an der OTH Regensburg zwischen Quantencomputing,
+      Machine Learning und wissenschaftlichem Rechnen.</p>
     <div class="hero-actions">
       <a href="#garden" class="btn btn-primary">🌱 Zum Garten</a>
       <a href="#projects" class="btn btn-ghost">Projekte ansehen</a>
@@ -59,14 +59,22 @@
       <button id="waterBtn" class="water-btn">
         <span class="drop">💧</span> Gießen
       </button>
+      <button id="plantBtn" class="plant-btn" title="Neuen Baum pflanzen">🌱 Neuer Baum</button>
       <div class="growth-meter">
         <div class="growth-label">Wachstum</div>
         <div class="growth-bar"><div id="growthFill" class="growth-fill"></div></div>
         <div id="growthPct" class="growth-pct">0%</div>
       </div>
-      <button id="resetBtn" class="reset-btn" title="Garten zurücksetzen">↺ Neu pflanzen</button>
+      <div class="growth-meter health-meter">
+        <div class="growth-label">Gesundheit</div>
+        <div class="growth-bar"><div id="healthFill" class="health-fill"></div></div>
+        <div id="healthPct" class="growth-pct">100%</div>
+      </div>
+      <div class="clock-chip" id="clockChip">🌤 Tag 1 · 00:00</div>
+      <button id="resetBtn" class="reset-btn" title="Garten komplett zurücksetzen">↺ Garten zurücksetzen</button>
     </div>
-    <p class="garden-hint" id="gardenHint">Klick auf "Gießen" oder direkt auf den Boden 🌱</p>
+    <div class="tree-selector" id="treeSelector"></div>
+    <p class="garden-hint" id="gardenHint">Klick auf einen Baum um ihn auszuwählen, dann "Gießen" — oder pflanze einen neuen 🌱</p>
   </div>
 </section>
 
@@ -104,37 +112,107 @@
     <p class="section-desc">Kurzüberblick — Details auf Anfrage.</p>
   </div>
 
-  <div class="timeline">
-    <div class="tl-item">
-      <div class="tl-dot"></div>
-      <div class="tl-content">
-        <span class="tl-date">laufend</span>
-        <h3>Master Machine Learning</h3>
-        <p>Vertiefung in Deep Learning, Physics-Informed Neural Networks, Quantum Machine Learning.</p>
+  <div class="cv-grid">
+    <div class="cv-col">
+      <h3 class="cv-col-title">🎓 Ausbildung</h3>
+      <div class="timeline">
+        <div class="tl-item">
+          <div class="tl-dot"></div>
+          <div class="tl-content">
+            <span class="tl-date">2026 – heute</span>
+            <h3>M.Sc. Artificial Intelligence</h3>
+            <p>Ostbayerische Technische Hochschule Regensburg (OTH Regensburg)</p>
+          </div>
+        </div>
+        <div class="tl-item">
+          <div class="tl-dot"></div>
+          <div class="tl-content">
+            <span class="tl-date">2021 – 2026</span>
+            <h3>B.Sc. Computer Science</h3>
+            <p>OTH Regensburg &middot; Abschlussnote 1,9 &middot; Bachelorarbeit 1,0</p>
+          </div>
+        </div>
+        <div class="tl-item">
+          <div class="tl-dot"></div>
+          <div class="tl-content">
+            <span class="tl-date">Aug. 2023 – Jan. 2024</span>
+            <h3>Austauschsemester — Machine Learning &amp; Data Science</h3>
+            <p>Maynooth University, Irland</p>
+          </div>
+        </div>
+        <div class="tl-item">
+          <div class="tl-dot"></div>
+          <div class="tl-content">
+            <span class="tl-date">2019 – 2021</span>
+            <h3>Fachabitur, Wirtschaft</h3>
+            <p>FOS/BOS Weiden</p>
+          </div>
+        </div>
       </div>
     </div>
-    <div class="tl-item">
-      <div class="tl-dot"></div>
-      <div class="tl-content">
-        <span class="tl-date">Forschung</span>
-        <h3>Quantum Computing &amp; Tensor Networks</h3>
-        <p>SAT-Solving mit Tensor-Netzwerken, Quantenschaltkreis-Simulation, quanteninspirierte Algorithmen.</p>
+
+    <div class="cv-col">
+      <h3 class="cv-col-title">💼 Berufserfahrung</h3>
+      <div class="timeline">
+        <div class="tl-item">
+          <div class="tl-dot"></div>
+          <div class="tl-content">
+            <span class="tl-date">März 2026 – heute</span>
+            <h3>Research Assistant</h3>
+            <p>OTH Regensburg &middot; Forschung zu Quantum Simulation &amp; Physics-Informed Neural Networks.</p>
+          </div>
+        </div>
+        <div class="tl-item">
+          <div class="tl-dot"></div>
+          <div class="tl-content">
+            <span class="tl-date">Jul. 2023 – Jan. 2026</span>
+            <h3>Student Research Assistant</h3>
+            <p>OTH Regensburg &middot; Projekte TAQO-PAM (Quantum Optimisation für Planung &amp; Fertigung) und Q-Linda &middot; Fokus auf Quantenoptimierung &amp; hybride Quanten-Klassik-Methoden.</p>
+          </div>
+        </div>
+        <div class="tl-item">
+          <div class="tl-dot"></div>
+          <div class="tl-content">
+            <span class="tl-date">Sep. 2024 – Jan. 2025</span>
+            <h3>Pflichtpraktikum (Forschung)</h3>
+            <p>Fraunhofer-Institut für Integrierte Schaltungen IIS &middot; Quantum Reinforcement Learning &amp; Software Engineering für Quantum-Computing-Anwendungen.</p>
+          </div>
+        </div>
+        <div class="tl-item">
+          <div class="tl-dot"></div>
+          <div class="tl-content">
+            <span class="tl-date">Jan. – Jun. 2023</span>
+            <h3>Student Research Assistant</h3>
+            <p>OTH Regensburg &middot; KI-Transfer Plus Projekt &middot; Data Science &amp; angewandte KI.</p>
+          </div>
+        </div>
+        <div class="tl-item">
+          <div class="tl-dot"></div>
+          <div class="tl-content">
+            <span class="tl-date">Jan. – Dez. 2022</span>
+            <h3>Student Assistant</h3>
+            <p>Universitätsbibliothek, OTH Regensburg</p>
+          </div>
+        </div>
       </div>
     </div>
-    <div class="tl-item">
-      <div class="tl-dot"></div>
-      <div class="tl-content">
-        <span class="tl-date">Skills</span>
-        <h3>Technologien</h3>
-        <p>Python, PyTorch, Qiskit / Quantenframeworks, numerische Methoden, wissenschaftliches Rechnen.</p>
-      </div>
-    </div>
-    <div class="tl-item">
-      <div class="tl-dot"></div>
-      <div class="tl-content">
-        <span class="tl-date">Bald</span>
-        <h3>CV als PDF</h3>
-        <p>Ausführlicher Lebenslauf folgt in Kürze zum Download.</p>
+
+    <div class="cv-col">
+      <h3 class="cv-col-title">🔬 Wissenschaftliche Beiträge</h3>
+      <ul class="contrib-list">
+        <li><span class="contrib-tag">1st Author</span> „Towards Tensor-Network SAT Solvers for Quantum-Classical Workflows“ — angenommen auf der <strong>IEEE QCE 2026</strong> (<a href="https://arxiv.org/abs/2608.02041" target="_blank" rel="noopener">arXiv:2608.02041</a>).</li>
+        <li><span class="contrib-tag">3rd Author</span> „It Works on My QPU“ — verfügbar auf <strong>arXiv</strong> (<a href="https://arxiv.org/abs/2607.08348" target="_blank" rel="noopener">arXiv:2607.08348</a>).</li>
+        <li><span class="contrib-tag">🏆</span> Gewinner der Demonstrator Competition, AI Days des Regensburg Center for Artificial Intelligence (RCAI).</li>
+      </ul>
+
+      <h3 class="cv-col-title" style="margin-top:34px;">🛠 Skills</h3>
+      <div class="skills-grid">
+        <div class="skill-cat"><span>Programmierung</span><p>Python, Java, C/C++, SQL</p></div>
+        <div class="skill-cat"><span>Machine Learning</span><p>PyTorch, TensorFlow, Scikit-learn</p></div>
+        <div class="skill-cat"><span>Data Science</span><p>Pandas, NumPy, Jupyter, Data Analysis</p></div>
+        <div class="skill-cat"><span>Quantum Computing</span><p>PennyLane, Qiskit</p></div>
+        <div class="skill-cat"><span>Optimierung</span><p>Mathematical &amp; Quantum Optimization</p></div>
+        <div class="skill-cat"><span>Tools</span><p>Git, Linux, LaTeX</p></div>
       </div>
     </div>
   </div>
@@ -151,7 +229,7 @@
     <a href="https://github.com/ZecPlusPlus" target="_blank" rel="noopener" class="contact-card">
       <span class="ci">🐙</span><span>GitHub</span>
     </a>
-    <a href="mailto:benjaminzec@web.de" class="contact-card">
+    <a href="mailto:benjamin.zec@oth-regensburg.de" class="contact-card">
       <span class="ci">✉️</span><span>E-Mail</span>
     </a>
   </div>
