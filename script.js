@@ -504,22 +504,35 @@ document.getElementById('year').textContent = new Date().getFullYear();
     Python: '#3572A5', JavaScript: '#f1e05a', TypeScript: '#2b7489',
     'C++': '#f34b7d', C: '#555555', HTML: '#e34c26', CSS: '#563d7c',
     Jupyter: '#DA5B0B', Rust: '#dea584', Go: '#00ADD8', Shell: '#89e051',
+    Julia: '#a270ba', TeX: '#3D6117',
   };
 
-  fetch(`https://api.github.com/users/${GH_USER}/repos?sort=updated&per_page=100`)
-    .then((r) => {
-      if (!r.ok) throw new Error('GitHub API error');
-      return r.json();
-    })
-    .then((repos) => {
-      const filtered = repos.filter((r) => !r.fork);
-      if (!filtered.length) {
+  // Lab repositories (not owned by GH_USER) that I contributed to as paper co-author
+  const EXTRA_REPOS = ['lfd/SAT_Tensor_Networks', 'lfd/qce26_repro_analysis'];
+
+  const fetchJson = (url) => fetch(url).then((r) => {
+    if (!r.ok) throw new Error('GitHub API error');
+    return r.json();
+  });
+
+  Promise.allSettled([
+    fetchJson(`https://api.github.com/users/${GH_USER}/repos?sort=updated&per_page=100`),
+    ...EXTRA_REPOS.map((full) => fetchJson(`https://api.github.com/repos/${full}`)),
+  ])
+    .then(([own, ...extras]) => {
+      const ownRepos = own.status === 'fulfilled' ? own.value.filter((r) => !r.fork) : [];
+      const labRepos = extras.filter((e) => e.status === 'fulfilled').map((e) => e.value);
+      if (own.status === 'rejected' && !labRepos.length) throw new Error('GitHub API error');
+
+      const all = [...labRepos, ...ownRepos];
+      if (!all.length) {
         grid.innerHTML = `<div class="repo-empty">No public repos yet — check back on
           <a href="https://github.com/${GH_USER}" target="_blank" rel="noopener" style="color:var(--accent2)">GitHub</a> in the meantime.</div>`;
         return;
       }
       grid.innerHTML = '';
-      filtered.forEach((repo) => {
+      all.forEach((repo) => {
+        const isLab = repo.owner && repo.owner.login !== GH_USER;
         const card = document.createElement('a');
         card.href = repo.html_url;
         card.target = '_blank';
@@ -527,7 +540,7 @@ document.getElementById('year').textContent = new Date().getFullYear();
         card.className = 'repo-card';
         const color = langColors[repo.language] || '#8a9aab';
         card.innerHTML = `
-          <div class="repo-name">📁 ${repo.name}</div>
+          <div class="repo-name">📁 ${isLab ? `${escapeHtml(repo.owner.login)}/` : ''}${escapeHtml(repo.name)}${isLab ? '<span class="repo-badge">Lab · co-author</span>' : ''}</div>
           <div class="repo-desc">${repo.description ? escapeHtml(repo.description) : 'No description yet.'}</div>
           <div class="repo-meta">
             ${repo.language ? `<span><span class="repo-lang-dot" style="background:${color}"></span>${repo.language}</span>` : ''}
